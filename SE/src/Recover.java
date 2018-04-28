@@ -22,7 +22,7 @@ public class Recover {
         return functions.get(index).goNext();
     }
 
-	public void goForward(TreeNode current, int instruction) {
+	public void goForward(TreeNode current, int instruction, int speed) {
 		// based on the instruction, call the right function on current state
 		TreeNode next = goNext(instruction);
 		
@@ -45,13 +45,25 @@ public class Recover {
 		return current;
 	}
 	
+	public void dualCore(TreeNode current, int speed) {
+		Scanner scan = new Scanner(System.in);
+		int index = scan.nextInt();
+		try {
+			goForward(current, index, speed);
+			goForward(current, index, 1);
+		}catch(Exception e) {
+			System.out.println("the quick thread has encountered the problem: " + e);
+		}
+	}
+	
 	public void process(int processID, TreeNode current){
+		int speed = 1;
 		  // id = 1 -> go forward to the next state
 		if(processID == 1){
 			// accept instruction index here
 			Scanner scan = new Scanner(System.in);
 			int index = scan.nextInt();
-			goForward(current, index);
+			goForward(current, index, speed);
 		}
 		  // id = 2 -> backup
 		else if(processID == 2){
@@ -63,6 +75,15 @@ public class Recover {
 			Scanner scan = new Scanner(System.in);
 			int steps = scan.nextInt();
 		    current = goBack(current, steps);
+		}
+		// id = 4 -> dual core run
+		else if(processID == 4) {
+			Scanner scan = new Scanner(System.in);
+			int quickSpeed = 1;
+			while(speed <= 1) {
+				speed = scan.nextInt();
+			}
+			dualCore(current, quickSpeed);
 		}
 	}
 
